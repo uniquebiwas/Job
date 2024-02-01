@@ -1,0 +1,110 @@
+{% if messages %}
+  {% for message in messages %}
+    <div class="mb-5 alert {{ message.tags }} alert-dismissible" role="alert" id="message-{{ forloop.counter }}">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <span class="message-content">{{ message }}</span>
+      <span class="timer" id="message-timer-{{ forloop.counter }}"> (4s)</span>
+    </div>
+
+    <script>
+      // Function to update the timer every second
+      function updateTimer(counter, timerValue) {
+        var timerSpan = document.getElementById('message-timer-' + counter);
+
+        if (timerValue > 0 && timerSpan) {
+          timerSpan.textContent = ' (' + timerValue + 's)';
+          setTimeout(function() {
+            updateTimer(counter, timerValue - 1);
+          }, 1000);
+        } else {
+          // Hide or remove the message container when the timer reaches 0
+          var messageElement = document.getElementById('message-' + counter);
+          if (messageElement) {
+            messageElement.style.display = 'none';
+          }
+        }
+      }
+
+      // Set the initial timer value (in seconds)
+      var initialTimerValue = 4;
+
+      // Call the function to start the timer for each message
+      updateTimer('{{ forloop.counter }}', initialTimerValue);
+    </script>
+  {% endfor %}
+{% endif %}
+{% if form.errors %}
+  {% for field in form %}
+    {% for error in field.errors %}
+      {% with counter=forloop.parentloop.counter %}
+      <div class="alert alert-danger alert-dismissable" role="alert" id="error-message-{{ counter }}">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>{{ field.label|capfirst }} {{ error|escape }}</strong>
+        <span class="timer" id="error-message-timer-{{ counter }}"> (4s)</span>
+      </div>
+      <script>
+        // Function to update the timer every second
+        function updateTimer(counter, timerValue) {
+          var timerSpan = document.getElementById('error-message-timer-' + counter);
+
+          if (timerValue > 0 && timerSpan) {
+            timerSpan.textContent = ' (' + timerValue + 's)';
+            setTimeout(function() {
+              updateTimer(counter, timerValue - 1);
+            }, 1000);
+          } else {
+            // Hide or remove the error message container when the timer reaches 0
+            var errorMessage = document.getElementById('error-message-' + counter);
+            if (errorMessage) {
+              errorMessage.style.display = 'none';
+            }
+          }
+        }
+
+        // Set the initial timer value (in seconds)
+        var initialTimerValue = 4;
+
+        // Call the function to start the timer for each error message
+        updateTimer('{{ counter }}', initialTimerValue);
+      </script>
+      {% endwith %}
+    {% endfor %}
+  {% endfor %}
+
+  {% for error in form.non_field_errors %}
+    {% with counter=forloop.counter %}
+    <div class="alert alert-danger alert-dismissable" role="alert" id="non-field-error-message-{{ counter }}">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{ error|escape }}</strong>
+      <span class="timer" id="non-field-error-message-timer-{{ counter }}"> (4s)</span>
+    </div>
+    <script>
+      // Function to update the timer every second
+      function updateTimer(counter, timerValue) {
+        var timerSpan = document.getElementById('non-field-error-message-timer-' + counter);
+
+        if (timerValue > 0 && timerSpan) {
+          timerSpan.textContent = ' (' + timerValue + 's)';
+          setTimeout(function() {
+            updateTimer(counter, timerValue - 1);
+          }, 1000);
+        } else {
+          // Hide or remove the non-field error message container when the timer reaches 0
+          var nonFieldErrorMessage = document.getElementById('non-field-error-message-' + counter);
+          if (nonFieldErrorMessage) {
+            nonFieldErrorMessage.style.display = 'none';
+          }
+        }
+      }
+
+      // Set the initial timer value (in seconds)
+      var initialTimerValue = 4;
+
+      // Call the function to start the timer for each non-field error message
+      updateTimer('{{ counter }}', initialTimerValue);
+    </script>
+    {% endwith %}
+  {% endfor %}
+{% endif %}
