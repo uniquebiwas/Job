@@ -34,14 +34,13 @@ jobs:
 
       - name: Set up SSH key
         run: |
-          echo "$SSH_PRIVATE_KEY" | base64 -d -i > ssh_key
-          cat ssh_key  
-          chmod 600 ssh_key
-          eval $(ssh-agent -s)
-          ssh-add ssh_key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          cat ~/.ssh/id_rsa  
+          chmod 600 ~/.ssh/id_rsa
+          
 
       - name: SSH into Google Cloud VM
         run: |
-          ssh -i ssh_key np03cs4m210080@34.16.179.250 'docker pull uniquebiwas/test_remotejob:latest && docker stop test_remotejob_container && docker rm test_remotejob_container && docker run -d --name test_remotejob_container -p 8000:8000 uniquebiwas/test_remotejob:latest'
+          ssh -i ~/.ssh/id_rsa np03cs4m210080@34.16.179.250 'docker pull uniquebiwas/test_remotejob:latest && docker stop test_remotejob_container && docker rm test_remotejob_container && docker run -d --name test_remotejob_container -p 8000:8000 uniquebiwas/test_remotejob:latest'
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
