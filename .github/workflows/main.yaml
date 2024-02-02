@@ -32,10 +32,15 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Deploy to Google Cloud VM
+      - name: Set up SSH key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" 
-          chmod 600 /home/np03cs4m210080/.ssh/id_rsa
-          ssh -i /home/np03cs4m210080/.ssh/id_rsa np03cs4m210080@34.16.179.250 'docker pull uniquebiwas/test_remotejob:latest && docker stop test_remotejob_container && docker rm test_remotejob_container && docker run -d --name test_remotejob_container -p 8000:8000 uniquebiwas/test_remotejob:latest'
+          echo "$SSH_PRIVATE_KEY" > ssh_key
+          chmod 600 ssh_key
+          eval $(ssh-agent -s)
+          ssh-add ssh_key
+
+      - name: SSH into Google Cloud VM
+        run: |
+          ssh -i ssh_key np03cs4m210080@34.16.179.250 'docker pull uniquebiwas/test_remotejob:latest && docker stop test_remotejob_container && docker rm test_remotejob_container && docker run -d --name test_remotejob_container -p 8000:8000 uniquebiwas/test_remotejob:latest'
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
