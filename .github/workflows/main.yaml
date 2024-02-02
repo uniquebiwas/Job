@@ -32,11 +32,7 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Add host key
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -t rsa 34.16.179.250 >> ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
+      
       - name: SSH into Google Cloud VM
         run: |
           ssh -v np03cs4m210080@34.16.179.250 'docker pull uniquebiwas/test_remotejob:latest && docker stop test_remotejob_container && docker rm test_remotejob_container && docker run -d --name test_remotejob_container -p 8000:8000 uniquebiwas/test_remotejob:latest'
