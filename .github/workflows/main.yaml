@@ -32,9 +32,6 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-
-      - name: Debug Known Hosts
-        run: cat ~/.ssh/known_hosts
       
       - name: SSH into Google Cloud VM
         run: |
