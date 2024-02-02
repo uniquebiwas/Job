@@ -34,8 +34,9 @@ jobs:
 
       - name: Set up SSH key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          cat ~/.ssh/id_rsa  
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /home/np03cs4m210080/.ssh/id_rsa
+          chmod 600 /home/np03cs4m210080/.ssh/id_rsa 
           chmod 600 ~/.ssh/id_rsa
           
 
